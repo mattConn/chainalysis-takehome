@@ -1,0 +1,33 @@
+@import '../../styles/variables';
+
+.coin-card {
+	color: white;
+	font-family: $font-main;
+	background-color: $darkest-blue;
+	margin: $margin-medium;
+	display: inline-block;
+	// width: 45%;
+	flex-basis: 45%;
+
+	.coin-title {
+		padding: $padding-small;
+		img, p {
+			display: inline-block;
+			margin: 0;
+		}
+		img {
+			margin-right: $margin-small;
+			position: relative;
+			top: 7px;
+		}
+
+		p {
+			font-size: 30px;
+			font-weight: 700;
+		}
+	}
+	
+	.exchanges {
+		background-color: $dark-grey;
+	}
+}

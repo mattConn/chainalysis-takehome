@@ -1,0 +1,29 @@
+@import '../../styles/variables';
+body {
+	margin: 0;
+}
+.app {
+	.container {
+		// background-color: $darkest-blue;
+		width: 100%;
+		max-width: 800px;
+		margin: 0 auto;
+		padding: $padding-small;
+
+		.title {
+			h1 {
+				font-family: $font-main;
+				font-weight: 700;
+				font-size: 80px;
+				margin: 0;
+				text-align: center;
+			}
+		}
+
+		.coins {
+			display: flex;
+			justify-content: center;
+			align-content: space-around;
+		}
+	}
+}
