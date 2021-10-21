@@ -12,19 +12,24 @@ import './index.scss'
 const Exchange = (props) => <div className={`exchange ${props.name}`}>
 	<div className="title">
 		<p>{props.name}</p>
-		{props.label ? 
-		<div className={`label ${props.label.toLowerCase()}`}>
-			<p>{props.label}</p>
+		{props.buyNow ? 
+		<div className={"recommend buy-now"} >
+			<p>BUY</p>
+		</div>
+		: null }
+		{props.sellNow ? 
+		<div className={"recommend sell-now"} >
+			<p>SELL</p>
 		</div>
 		: null }
 	</div>
 
 	<div className="prices">
 		<div className="buy">
-			<p>{props.buy} Buy</p>
+			<p>{props.buyPrice} Buy</p>
 		</div>
 		<div className="sell">
-			<p>{props.sell} Sell</p>
+			<p>{props.sellPrice} Sell</p>
 		</div>
 	</div>
 </div>

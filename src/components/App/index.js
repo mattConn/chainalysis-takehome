@@ -12,15 +12,14 @@ class App extends React.Component {
 				exchanges: [
 					{
 						name: 'Coinbase',
-						buy: '$1000',
-						sell: '$2000',
-						label: 'BUY',
+						buyPrice: '$4118.73',
+						sellPrice: '$4076.18',
+						buyNow: true,
 					},
 					{
 						name: 'Blockchain',
-						buy: '$1800',
-						sell: '$1400',
-						label: null,
+						buyPrice: '$1800',
+						sellPrice: '$1400',
 					}
 				]
 			},
@@ -30,15 +29,13 @@ class App extends React.Component {
 				exchanges: [
 					{
 						name: 'Coinbase',
-						buy: '$1000',
-						sell: '$2000',
-						label: null,
+						buyPrice: '$63344.18',
+						sellPrice: '$62767.50',
 					},
 					{
 						name: 'Blockchain',
-						buy: '$1800',
-						sell: '$1400',
-						label: null,
+						buyPrice: '$1800',
+						sellPrice: '$1400',
 					}
 				]
 			},

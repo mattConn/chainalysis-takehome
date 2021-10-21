@@ -16,23 +16,26 @@
 			font-size: 25px;
 			margin: 0;
 		}
-		.label {
-			background-color: $cool-green;
+		.recommend {
+			&.buy-now {
+				background-color: $cool-green;
+			}
+			&.sell-now {
+				background-color: $cool-red;
+			}
+
 			padding: $padding-very-small;
 			border-radius: 5%;
 			p {
-				font-size: 17px;
+				// font-size: 17px;
 				color: $darkest-blue;
 			}
 		}
 	}
 	.prices {
-		div {
-			display: inline-block;
-			margin-right: $margin-medium;
-		}
 		p {
 			font-family: $font-copy;
+
 		}
 	}
 

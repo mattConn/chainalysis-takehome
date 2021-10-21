@@ -17,9 +17,10 @@ const CoinCard = (props) => <div className={`coin-card ${props.name}`}>
 			props.exchanges.map(exchange => <Exchange 
 				name={exchange.name}
 				icon={exchange.icon}
-				buy={exchange.buy}
-				sell={exchange.sell}
-				label={exchange.label}
+				buyPrice={exchange.buyPrice}
+				sellPrice={exchange.sellPrice}
+				buyNow={exchange.buyNow}
+				sellNow={exchange.sellNow}
 			/>)
 		}
 	</div>
