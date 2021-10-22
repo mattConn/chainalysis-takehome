@@ -15,15 +15,50 @@ type exchangeData struct {
 
 type coinbaseSchema struct {
 	Data struct {
-		Base     string `json:"base"`
-		Currency string `json:"currency"`
-		Amount   string `json:"amount"`
+		Amount string `json:"amount"`
 	} `json:"data"`
+}
+
+type krakenSchemaBTC struct {
+	Result struct {
+		Data struct {
+			Buy  []string `json:"a"` // ask
+			Sell []string `json:"b"` // bid
+		} `json:"XXBTZUSD"`
+	} `json:"result"`
+}
+
+type krakenSchemaETH struct {
+	Result struct {
+		Data struct {
+			Buy  []string `json:"a"` // ask
+			Sell []string `json:"b"` // bid
+		} `json:"XETHZUSD"`
+	} `json:"result"`
 }
 
 func coinbaseToData(transactions map[string]interface{}) *exchangeData {
 	buy := transactions["buy"].(*coinbaseSchema).Data.Amount
 	sell := transactions["sell"].(*coinbaseSchema).Data.Amount
+
+	return &exchangeData{
+		Buy:  buy,
+		Sell: sell,
+	}
+}
+
+func krakenToData(transactions map[string]interface{}, symbol string) *exchangeData {
+	var buy, sell string
+
+	switch symbol {
+	case "eth":
+		buy = transactions["buy-sell"].(*krakenSchemaETH).Result.Data.Buy[0]
+		sell = transactions["buy-sell"].(*krakenSchemaETH).Result.Data.Sell[0]
+
+	case "btc":
+		buy = transactions["buy-sell"].(*krakenSchemaBTC).Result.Data.Buy[0]
+		sell = transactions["buy-sell"].(*krakenSchemaBTC).Result.Data.Sell[0]
+	}
 
 	return &exchangeData{
 		Buy:  buy,
@@ -78,27 +113,31 @@ func main() {
 		"kraken": {
 			"btc": {
 				"buy-sell": {
-					schema: &coinbaseSchema{},
+					schema: &krakenSchemaBTC{},
 					url:    "https://api.kraken.com/0/public/Ticker?pair=BTCUSD",
 				},
 			},
 			"eth": {
 				"buy-sell": {
-					schema: &coinbaseSchema{},
+					schema: &krakenSchemaETH{},
 					url:    "https://api.kraken.com/0/public/Ticker?pair=ETHUSD",
 				},
 			},
 		},
 	}
 
-	http.HandleFunc("/btc", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		data := make(map[string]*exchangeData)
+		symbol := r.URL.Path[1:]
 
 		for exchange, coins := range apis {
+			if _, ok := coins[symbol]; !ok {
+				continue
+			}
 
 			transactions := make(map[string]interface{})
 
-			for transaction, pair := range coins["btc"] {
+			for transaction, pair := range coins[symbol] {
 				_, err := getRespJSON(pair.url, pair.schema)
 
 				if err != nil {
@@ -111,6 +150,8 @@ func main() {
 			switch exchange {
 			case "coinbase":
 				data[exchange] = coinbaseToData(transactions)
+			case "kraken":
+				data[exchange] = krakenToData(transactions, symbol)
 			}
 		}
 
