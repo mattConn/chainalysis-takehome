@@ -37,7 +37,37 @@ func getRespJSON(w http.ResponseWriter, url string, schema interface{}) ([]byte,
 }
 
 func main() {
+	apis := map[string]map[string]map[string]struct {
+		schema interface{}
+		url    string
+	}{
+		"coinbase.com": {
+			"btc": {
+				"buy": {
+					schema: &coinbaseSchema{},
+					url:    "https://api.coinbase.com/v2/prices/BTC-USD/buy",
+				},
+				"sell": {
+					schema: &coinbaseSchema{},
+					url:    "https://api.coinbase.com/v2/prices/BTC-USD/sell",
+				},
+			},
+
+			"eth": {
+				"buy": {
+					schema: &coinbaseSchema{},
+					url:    "https://api.coinbase.com/v2/prices/ETH-USD/buy",
+				},
+				"sell": {
+					schema: &coinbaseSchema{},
+					url:    "https://api.coinbase.com/v2/prices/ETH-USD/sell",
+				},
+			},
+		},
+	}
+
 	http.HandleFunc("/btc", func(w http.ResponseWriter, r *http.Request) {
+
 		response := &coinbaseSchema{}
 		j, err := getRespJSON(w, "https://api.coinbase.com/v2/prices/BTC-USD/buy", response)
 
