@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type exchange struct {
+type exchangeData struct {
 	Buy     string `json:"buy"`
 	Sell    string `json:"sell"`
 	BuyNow  bool   `json:"buyNow"`
@@ -21,7 +21,17 @@ type coinbaseSchema struct {
 	} `json:"data"`
 }
 
-func getRespJSON(w http.ResponseWriter, url string, schema interface{}) ([]byte, error) {
+func coinbaseToData(transactions map[string]interface{}) *exchangeData {
+	buy := transactions["buy"].(*coinbaseSchema).Data.Amount
+	sell := transactions["sell"].(*coinbaseSchema).Data.Amount
+
+	return &exchangeData{
+		Buy:  buy,
+		Sell: sell,
+	}
+}
+
+func getRespJSON(url string, schema interface{}) ([]byte, error) {
 	response, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -41,7 +51,7 @@ func main() {
 		schema interface{}
 		url    string
 	}{
-		"coinbase.com": {
+		"coinbase": {
 			"btc": {
 				"buy": {
 					schema: &coinbaseSchema{},
@@ -64,17 +74,53 @@ func main() {
 				},
 			},
 		},
+
+		"kraken": {
+			"btc": {
+				"buy-sell": {
+					schema: &coinbaseSchema{},
+					url:    "https://api.kraken.com/0/public/Ticker?pair=BTCUSD",
+				},
+			},
+			"eth": {
+				"buy-sell": {
+					schema: &coinbaseSchema{},
+					url:    "https://api.kraken.com/0/public/Ticker?pair=ETHUSD",
+				},
+			},
+		},
 	}
 
 	http.HandleFunc("/btc", func(w http.ResponseWriter, r *http.Request) {
+		data := make(map[string]*exchangeData)
 
-		response := &coinbaseSchema{}
-		j, err := getRespJSON(w, "https://api.coinbase.com/v2/prices/BTC-USD/buy", response)
+		for exchange, coins := range apis {
+
+			transactions := make(map[string]interface{})
+
+			for transaction, pair := range coins["btc"] {
+				_, err := getRespJSON(pair.url, pair.schema)
+
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				transactions[transaction] = pair.schema
+			}
+
+			switch exchange {
+			case "coinbase":
+				data[exchange] = coinbaseToData(transactions)
+			}
+		}
+
+		j, err := json.Marshal(data)
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(j)
 	})
