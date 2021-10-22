@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"math"
 	"net/http"
+	"strconv"
 )
 
 type exchangeData struct {
@@ -130,6 +132,21 @@ func main() {
 		data := make(map[string]*exchangeData)
 		symbol := r.URL.Path[1:]
 
+		// for finding best buy/sell prices
+		maxSell := struct {
+			price    float64
+			exchange string
+		}{
+			price: float64(0),
+		}
+
+		minBuy := struct {
+			price    float64
+			exchange string
+		}{
+			price: math.MaxFloat64,
+		}
+
 		for exchange, coins := range apis {
 			if _, ok := coins[symbol]; !ok {
 				continue
@@ -153,6 +170,27 @@ func main() {
 			case "kraken":
 				data[exchange] = krakenToData(transactions, symbol)
 			}
+
+			// find lowest buy and highest sell
+			buyPrice, _ := strconv.ParseFloat(data[exchange].Buy, 64)
+			sellPrice, _ := strconv.ParseFloat(data[exchange].Sell, 64)
+
+			if buyPrice < minBuy.price {
+				minBuy.price = buyPrice
+				minBuy.exchange = exchange
+			}
+			if sellPrice > maxSell.price {
+				maxSell.price = sellPrice
+				maxSell.exchange = exchange
+			}
+		}
+
+		// set best buy and sell
+		if _, ok := data[minBuy.exchange]; ok {
+			data[minBuy.exchange].BuyNow = true
+		}
+		if _, ok := data[maxSell.exchange]; ok {
+			data[maxSell.exchange].SellNow = true
 		}
 
 		j, err := json.Marshal(data)
