@@ -26,10 +26,10 @@ const Exchange = (props) => <div className={`exchange ${props.name}`}>
 
 	<div className="prices">
 		<div className="buy">
-			<p>{props.buyPrice} Buy</p>
+			<p>${props.buyPrice} Buy</p>
 		</div>
 		<div className="sell">
-			<p>{props.sellPrice} Sell</p>
+			<p>${props.sellPrice} Sell</p>
 		</div>
 	</div>
 </div>

@@ -5,41 +5,30 @@ import './index.scss'
 
 class App extends React.Component {
 	state = {
-		coins: [
-			{
-				name: 'ETH',
-				icon: 'eth.svg',
-				exchanges: [
-					{
-						name: 'Coinbase',
-						buyPrice: '$4118.73',
-						sellPrice: '$4076.18',
-						buyNow: true,
-					},
-					{
-						name: 'Blockchain',
-						buyPrice: '$1800',
-						sellPrice: '$1400',
-					}
-				]
-			},
-			{
-				name: 'BTC',
-				icon: 'btc.svg',
-				exchanges: [
-					{
-						name: 'Coinbase',
-						buyPrice: '$63344.18',
-						sellPrice: '$62767.50',
-					},
-					{
-						name: 'Blockchain',
-						buyPrice: '$1800',
-						sellPrice: '$1400',
-					}
-				]
-			},
+		coins: null,
+	}
+
+	componentDidMount(){
+		const endpoints = [
+			"http://localhost:8080/eth",
+			"http://localhost:8080/btc"
 		]
+
+		const symbols = [
+			"eth",
+			"btc"
+		]
+
+		Promise.all(endpoints.map(e => fetch(e)))
+		.then(responses => Promise.all(responses.map(r => r.json())))
+		.then(data => {
+			const coins = {}
+			symbols.forEach((symbol, i) => {
+				coins[symbol] = data[i]
+			})
+			this.setState({coins: coins})
+			console.log(this.state.coins)
+		})
 	}
 
 	render(){
@@ -50,10 +39,11 @@ class App extends React.Component {
 			</div>
 			<div className="coins">
 			{
-				this.state.coins.map(coin => <CoinCard
-					name={coin.name}
-					icon={`/${coin.icon}`}
-					exchanges={coin.exchanges}
+				!this.state.coins ? null :
+				Object.keys(this.state.coins).map(coin => <CoinCard
+					name={coin.toUpperCase()}
+					icon={`/${coin}.svg`}
+					exchanges={this.state.coins[coin]}
 				/>)
 			}
 			</div>

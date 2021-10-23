@@ -14,13 +14,13 @@ const CoinCard = (props) => <div className={`coin-card ${props.name}`}>
 
 	<div className="exchanges">
 		{
-			props.exchanges.map(exchange => <Exchange 
-				name={exchange.name}
-				icon={exchange.icon}
-				buyPrice={exchange.buyPrice}
-				sellPrice={exchange.sellPrice}
-				buyNow={exchange.buyNow}
-				sellNow={exchange.sellNow}
+			Object.keys(props.exchanges).map(exchange => <Exchange 
+				name={exchange}
+				// icon={exchange.icon}
+				buyPrice={props.exchanges[exchange].buy}
+				sellPrice={props.exchanges[exchange].sell}
+				buyNow={props.exchanges[exchange].buyNow}
+				sellNow={props.exchanges[exchange].sellNow}
 			/>)
 		}
 	</div>

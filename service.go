@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -161,9 +163,39 @@ func main() {
 		},
 	}
 
+	cors := false
+	port := ":8080"
+
+	if len(os.Args) > 1 {
+		for i, arg := range os.Args[1:] {
+			switch arg {
+			case "-c":
+				cors = true
+
+			case "-p":
+				port = os.Args[i+1]
+			}
+		}
+	}
+
+	symbols := map[string]bool{
+		"btc": true,
+		"eth": true,
+	}
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		data := make(map[string]*exchangeData)
 		symbol := r.URL.Path[1:]
+
+		if _, ok := symbols[symbol]; !ok {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+
+		if cors {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		}
+
+		data := make(map[string]*exchangeData)
 
 		// for finding best buy/sell prices
 		maxSell := struct {
@@ -239,5 +271,9 @@ func main() {
 		w.Write(j)
 	})
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	if cors {
+		fmt.Println("CORS allowed")
+	}
+	fmt.Printf("Listening on %s...\n", port)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
