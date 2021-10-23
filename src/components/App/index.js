@@ -44,6 +44,15 @@ class App extends React.Component {
 					name={coin.toUpperCase()}
 					icon={`/${coin}.svg`}
 					exchanges={this.state.coins[coin]}
+					refreshHandler={()=>{
+						fetch(`http://localhost:8080/${coin}`)
+						.then(response => response.json())
+						.then(data => {
+							const coins = this.state.coins
+							coins[coin]=data
+							this.setState({coins: coins})
+						})
+					}}
 				/>)
 			}
 			</div>
