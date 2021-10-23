@@ -39,6 +39,21 @@ type krakenSchemaETH struct {
 	} `json:"result"`
 }
 
+type geminiSchema struct {
+	Buy  string `json:"ask"`
+	Sell string `json:"bid"`
+}
+
+func geminiToData(transactions map[string]interface{}) *exchangeData {
+	buy := transactions["buy-sell"].(*geminiSchema).Buy
+	sell := transactions["buy-sell"].(*geminiSchema).Sell
+
+	return &exchangeData{
+		Buy:  buy,
+		Sell: sell,
+	}
+}
+
 func coinbaseToData(transactions map[string]interface{}) *exchangeData {
 	buy := transactions["buy"].(*coinbaseSchema).Data.Amount
 	sell := transactions["sell"].(*coinbaseSchema).Data.Amount
@@ -66,6 +81,7 @@ func krakenToData(transactions map[string]interface{}, symbol string) *exchangeD
 		Buy:  buy,
 		Sell: sell,
 	}
+
 }
 
 func getRespJSON(url string, schema interface{}) ([]byte, error) {
@@ -88,26 +104,43 @@ func main() {
 		schema interface{}
 		url    string
 	}{
-		"coinbase": {
-			"btc": {
-				"buy": {
-					schema: &coinbaseSchema{},
-					url:    "https://api.coinbase.com/v2/prices/BTC-USD/buy",
+		/*
+			"coinbase": {
+				"btc": {
+					"buy": {
+						schema: &coinbaseSchema{},
+						url:    "https://api.coinbase.com/v2/prices/BTC-USD/buy",
+					},
+					"sell": {
+						schema: &coinbaseSchema{},
+						url:    "https://api.coinbase.com/v2/prices/BTC-USD/sell",
+					},
 				},
-				"sell": {
-					schema: &coinbaseSchema{},
-					url:    "https://api.coinbase.com/v2/prices/BTC-USD/sell",
+
+				"eth": {
+					"buy": {
+						schema: &coinbaseSchema{},
+						url:    "https://api.coinbase.com/v2/prices/ETH-USD/buy",
+					},
+					"sell": {
+						schema: &coinbaseSchema{},
+						url:    "https://api.coinbase.com/v2/prices/ETH-USD/sell",
+					},
 				},
 			},
+		*/
 
-			"eth": {
-				"buy": {
-					schema: &coinbaseSchema{},
-					url:    "https://api.coinbase.com/v2/prices/ETH-USD/buy",
+		"gemini": {
+			"btc": {
+				"buy-sell": {
+					schema: &geminiSchema{},
+					url:    "https://api.gemini.com/v2/ticker/BTCUSD",
 				},
-				"sell": {
-					schema: &coinbaseSchema{},
-					url:    "https://api.coinbase.com/v2/prices/ETH-USD/sell",
+			},
+			"eth": {
+				"buy-sell": {
+					schema: &geminiSchema{},
+					url:    "https://api.gemini.com/v2/ticker/ETHUSD",
 				},
 			},
 		},
@@ -169,6 +202,8 @@ func main() {
 				data[exchange] = coinbaseToData(transactions)
 			case "kraken":
 				data[exchange] = krakenToData(transactions, symbol)
+			case "gemini":
+				data[exchange] = geminiToData(transactions)
 			}
 
 			// find lowest buy and highest sell
