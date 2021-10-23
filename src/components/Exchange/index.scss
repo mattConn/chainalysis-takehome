@@ -7,6 +7,7 @@
 	transition: background-color 0.08s;
 	cursor: pointer;
 	font-size: 20px;
+	border-bottom: solid 2px $darkest-blue;
 
 	.title {
 		display: flex;
@@ -15,13 +16,18 @@
 			font-weight: 700;
 			font-size: 25px;
 			margin: 0;
+			text-transform: capitalize;
 		}
 		.recommend {
 			&.buy-now {
-				background-color: $cool-green;
+				p{
+					color: $cool-green;
+				}
 			}
 			&.sell-now {
-				background-color: $cool-red;
+				p {
+					color: $cool-red;
+				}
 			}
 
 			padding: $padding-very-small;

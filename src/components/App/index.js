@@ -41,7 +41,7 @@ class App extends React.Component {
 			{
 				!this.state.coins ? null :
 				Object.keys(this.state.coins).map(coin => <CoinCard
-					name={coin.toUpperCase()}
+					name={coin}
 					icon={`/${coin}.svg`}
 					exchanges={this.state.coins[coin]}
 					refreshHandler={()=>{

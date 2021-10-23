@@ -19,7 +19,6 @@ const CoinCard = (props) => <div className={`coin-card ${props.name}`}>
 		{
 			Object.keys(props.exchanges).map(exchange => <Exchange 
 				name={exchange}
-				// icon={exchange.icon}
 				buyPrice={props.exchanges[exchange].buy}
 				sellPrice={props.exchanges[exchange].sell}
 				buyNow={props.exchanges[exchange].buyNow}
