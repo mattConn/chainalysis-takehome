@@ -163,36 +163,37 @@ func main() {
 		},
 	}
 
-	cors := false
-	port := ":8080"
-
-	if len(os.Args) > 1 {
-		for i, arg := range os.Args[1:] {
-			switch arg {
-			case "-c":
-				cors = true
-
-			case "-p":
-				port = os.Args[i+1]
-			}
-		}
-	}
-
 	symbols := map[string]bool{
 		"btc": true,
 		"eth": true,
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		symbol := r.URL.Path[1:]
+	frontend := os.Getenv("FRONTEND")
+	if len(frontend) == 0 {
+		frontend = "http://localhost:3000"
+	}
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = ":8080"
+	}
 
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Set CORS headers for the preflight request
+		if r.Method == http.MethodOptions {
+			w.Header().Set("Access-Control-Allow-Origin", frontend)
+			w.Header().Set("Access-Control-Allow-Methods", "POST")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			w.Header().Set("Access-Control-Max-Age", "3600")
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		// Set CORS headers for the main request.
+		w.Header().Set("Access-Control-Allow-Origin", frontend)
+
+		symbol := r.URL.Path[1:]
 		if _, ok := symbols[symbol]; !ok {
 			w.WriteHeader(http.StatusNotFound)
 			return
-		}
-
-		if cors {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
 		}
 
 		data := make(map[string]*exchangeData)
@@ -271,9 +272,7 @@ func main() {
 		w.Write(j)
 	})
 
-	if cors {
-		fmt.Println("CORS allowed")
-	}
+	fmt.Println("Frontend:", frontend)
 	fmt.Printf("Listening on %s...\n", port)
 	log.Fatal(http.ListenAndServe(port, nil))
 }
