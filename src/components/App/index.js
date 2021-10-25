@@ -10,8 +10,8 @@ class App extends React.Component {
 
 	componentDidMount(){
 		const endpoints = [
-			"http://localhost:8080/eth",
-			"http://localhost:8080/btc"
+			`${process.env.REACT_APP_BACKEND}/eth`,
+			`${process.env.REACT_APP_BACKEND}/btc`,
 		]
 
 		const symbols = [
@@ -27,7 +27,6 @@ class App extends React.Component {
 				coins[symbol] = data[i]
 			})
 			this.setState({coins: coins})
-			console.log(this.state.coins)
 		})
 	}
 
@@ -45,7 +44,7 @@ class App extends React.Component {
 					icon={`/${coin}.svg`}
 					exchanges={this.state.coins[coin]}
 					refreshHandler={()=>{
-						fetch(`http://localhost:8080/${coin}`)
+						fetch(`${process.env.REACT_APP_BACKEND}/${coin}`)
 						.then(response => response.json())
 						.then(data => {
 							const coins = this.state.coins
