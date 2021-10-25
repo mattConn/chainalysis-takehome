@@ -169,12 +169,12 @@ func main() {
 	}
 
 	frontend := os.Getenv("FRONTEND")
-	if len(frontend) == 0 {
+	if frontend == "" {
 		frontend = "http://localhost:3000"
 	}
 	port := os.Getenv("PORT")
-	if len(port) == 0 {
-		port = ":8080"
+	if port == "" {
+		port = "8080"
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -273,6 +273,6 @@ func main() {
 	})
 
 	fmt.Println("Frontend:", frontend)
-	fmt.Printf("Listening on %s...\n", port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	fmt.Printf("Listening on :%s...\n", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
