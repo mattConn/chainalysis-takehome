@@ -1,3 +1,4 @@
+.PHONY: make 
 MAKEFLAGS=-j2
 
 frontend:
@@ -14,6 +15,7 @@ build-frontend:
 build-backend:
 	cd backend; gcloud builds submit --tag gcr.io/chainalysis-takehome/backend
 
+.PHONY: build
 build: build-frontend build-backend
 
 deploy-frontend: 
