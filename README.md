@@ -1,70 +1,33 @@
-# Getting Started with Create React App
+# Chainalysis Takehome - CoinPicker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Dependencies and Setup
+This project depends on Node, React and Go. For deployment, it uses Firebase (for hosting React frontend) and Google Cloud Platform (GCP) (for hosting Go backend). A single firebase project is used and shared across Firebase and GCP, and will be referenced throughout most configuration as "chainalysis-takehome" (for the frontend) and "chainalysis-takehome/backend" (for the backend).   
+The following steps are required to get started:
 
-## Available Scripts
+- Make sure Node and Go are installed
+- Run `npm install` to install all Node modules
 
-In the project directory, you can run:
+You can begin development and testing or just host this project locally after this step. Running `make run` will start the necessary local servers.  
+The remaining steps are for setting up Cloud Build and deployment with GCP and Firebase.
 
-### `npm start`
+- Install firebase tools with `npm install -g firebase-tools`
+    - If you've just installed Firebase tools, you'll need to set that up, follow the instructions here: https://firebase.google.com/docs/hosting/quickstart
+- Install `gcloud` by downloading the installers and follow the instructions here: https://cloud.google.com/sdk/docs/install
+    - Make sure you allow the appropriate permissions in your GCP console (Cloud Run and Cloud Build).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# Building and Deployment
+Both the frontend and backend of this project rely on environment variables.  
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+On the React side, an envrionment variable specifies where to `fetch` from, specified in `.env.development` for development, and `env.production` (which you will need to make) for production.
 
-### `npm test`
+For Go, an envrionment variable is read that specifies the rules for `Access-Control-Allow-Origin`, specified in the Google Cloud Run console, under "Edit & Deploy New Revision" > "Variables & Secrets".
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Build and deploy order of the frontend and backend doesn't really matter, except that one needs the address of other, so on first build, you will need to record these addresses.
 
-### `npm run build`
+- Run `make build` to build the react and go deliverables
+- Run `make deploy-frontend` to deploy to Firebase hosting
+    - You will get the address of your now deployed React app; this will be the `FRONTEND` variable you set in the Cloud Run console later 
+- Run `make deploy-backend` to deploy to Cloud Run. This is like running `make deploy-frontend`; you will now get the url of your backend Copy this into a new file `.env.production`, which should look like `.env.development`
+- Now go into the Cloud Run console and and set the `FRONTEND` variable
+- Lastly, run `make build-frontend` and `make deploy-frontend`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
