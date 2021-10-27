@@ -9,29 +9,47 @@ import './index.scss'
  * @param sellRank
  */
 
-const Exchange = (props) => <div className={`exchange ${props.name}`}>
-	<div className="title">
-		<p>{props.name}</p>
-		{props.buyNow ? 
-		<div className={"recommend buy-now"} >
-			<p>BUY</p>
-		</div>
-		: null }
-		{props.sellNow ? 
-		<div className={"recommend sell-now"} >
-			<p>SELL</p>
-		</div>
-		: null }
-	</div>
+const Exchange = (props) => {
+	let recommend = null
+	if(props.buyNow && props.sellNow){
+		recommend = {
+			class: "buy-sell-now",
+			content: <p>
+				<p className="buy">buy</p>
+				<p className="sell">sell</p>
+				</p>
+		}
+	} else if(props.buyNow) {
+		recommend = {
+			class: "buy-now",
+			content: <p>buy</p>
+		}
+	} else if(props.sellNow){
+		recommend = {
+			class: "sell-now",
+			content: <p>sell</p>
+		}
+	}
 
-	<div className="prices">
-		<div className="buy">
-			<p>${props.buyPrice} Buy</p>
+	return <div className={`exchange ${props.name}`}>
+		<div className="title">
+			<p>{props.name}</p>
+			{!recommend ? null :
+				<div className={`recommend ${recommend.class}`} >
+					{recommend.content}
+				</div>
+			}
 		</div>
-		<div className="sell">
-			<p>${props.sellPrice} Sell</p>
+
+		<div className="prices">
+			<div className="buy">
+				<p>${props.buyPrice} Buy</p>
+			</div>
+			<div className="sell">
+				<p>${props.sellPrice} Sell</p>
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 export default Exchange

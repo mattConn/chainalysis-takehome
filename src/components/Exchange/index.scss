@@ -29,6 +29,20 @@
 					color: $cool-red;
 				}
 			}
+			&.buy-sell-now {
+				p{
+					display: inline-block;
+					&.buy {
+						text-transform: capitalize;
+						color: $cool-green;
+						margin-right: $margin-small;
+					}
+					&.sell {
+						text-transform: capitalize;
+						color: $cool-red;
+					}
+				}
+			}
 
 			padding: $padding-very-small;
 			border-radius: 5%;
