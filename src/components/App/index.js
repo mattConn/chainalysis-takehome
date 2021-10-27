@@ -7,6 +7,7 @@ class App extends React.Component {
 	state = {
 		coins: null,
 		error: null,
+		loaded: false
 	}
 
 	componentDidMount(){
@@ -28,12 +29,29 @@ class App extends React.Component {
 				coins[symbol] = {exchanges: data[i]}
 				coins[symbol].loaded = true
 			})
-			this.setState({coins: coins})
+			this.setState({
+				coins: coins,
+				loaded: true
+			})
 		})
-		.catch(error => this.setState({error: "Cannot make initial fetch"}))
+		.catch(error => this.setState({
+			error: "Cannot make initial fetch",
+			loaded: true
+		}))
 }
 
 	render(){
+		if(!this.state.loaded){
+		return <div className="app">
+				<div className="container">
+					<div className="title">
+						<h1>CoinPicker</h1>
+					</div>
+					<div className="loading"></div>
+				</div>
+			</div>
+		}
+
 		return <div className="app">
 			<div className="container">
 			<div className="title">
