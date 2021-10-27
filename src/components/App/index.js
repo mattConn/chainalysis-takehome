@@ -6,6 +6,7 @@ import './index.scss'
 class App extends React.Component {
 	state = {
 		coins: null,
+		error: null,
 	}
 
 	componentDidMount(){
@@ -29,7 +30,8 @@ class App extends React.Component {
 			})
 			this.setState({coins: coins})
 		})
-	}
+		.catch(error => this.setState({error: "Cannot make initial fetch"}))
+}
 
 	render(){
 		return <div className="app">
@@ -37,6 +39,15 @@ class App extends React.Component {
 			<div className="title">
 				<h1>CoinPicker</h1>
 			</div>
+
+			{this.state.error ?
+				<div className="error">
+					<p>Something went wrong. <span onClick={
+						()=> window.location.reload()
+					}>Retry</span></p>
+				</div>
+			: null}
+
 			<div className="coins">
 			{
 				!this.state.coins ? null :
@@ -58,6 +69,7 @@ class App extends React.Component {
 							coins[coin].loaded = true 
 							this.setState({coins: coins})
 						})
+						.catch(error => this.setState({error: `Cannot fetch ${process.env.REACT_APP_BACKEND}/${coin}`}))
 					}}
 				/>)
 			}

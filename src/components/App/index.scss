@@ -1,4 +1,7 @@
 @import '../../styles/variables';
+* {
+	box-sizing: border-box;
+}
 body {
 	margin: 0;
 }
@@ -18,6 +21,24 @@ body {
 				margin: 0;
 				text-align: center;
 				color: $darkest-blue;
+			}
+		}
+
+		.error {
+			padding: $padding-small;
+			background-color: $cool-red;
+			width: 100%;
+			p {
+				margin: 0;
+				font-family: $font-main;
+				font-size: 20px;
+				color: white;
+
+				span {
+					text-decoration: underline;
+					cursor: pointer;
+					margin-left: $margin-small;
+				}
 			}
 		}
 
