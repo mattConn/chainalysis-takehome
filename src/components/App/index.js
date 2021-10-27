@@ -24,7 +24,8 @@ class App extends React.Component {
 		.then(data => {
 			const coins = {}
 			symbols.forEach((symbol, i) => {
-				coins[symbol] = data[i]
+				coins[symbol] = {exchanges: data[i]}
+				coins[symbol].loaded = true
 			})
 			this.setState({coins: coins})
 		})
@@ -42,13 +43,19 @@ class App extends React.Component {
 				Object.keys(this.state.coins).map(coin => <CoinCard
 					name={coin}
 					icon={`/${coin}.svg`}
-					exchanges={this.state.coins[coin]}
+					exchanges={this.state.coins[coin].exchanges}
+					loaded={this.state.coins[coin].loaded}
 					refreshHandler={()=>{
+						const coins = this.state.coins
+						coins[coin].loaded = false
+						this.setState({coins: coins})
+
 						fetch(`${process.env.REACT_APP_BACKEND}/${coin}`)
 						.then(response => response.json())
 						.then(data => {
 							const coins = this.state.coins
-							coins[coin]=data
+							coins[coin].exchanges=data
+							coins[coin].loaded = true 
 							this.setState({coins: coins})
 						})
 					}}

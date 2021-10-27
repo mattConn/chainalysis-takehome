@@ -8,7 +8,7 @@ import 'glyphicons-only-bootstrap/css/bootstrap.min.css'
  * @param icon 
  * @param exchanges
  */
-const CoinCard = (props) => <div className={`coin-card ${props.name}`}>
+const CoinCard = (props) => <div className={`coin-card ${props.name} ${!props.loaded ? 'loading' : null}`}>
 	<div className="coin-title">
 		<img className="icon" alt="icon" src={props.icon}/>
 		<p>{props.name}</p>
