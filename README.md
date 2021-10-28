@@ -90,6 +90,8 @@ Now for building:
 
 I would have liked to have implemented an auto-update on the frontend to continuously fetch data from the API's, which would be limited by the lowest rate limit amongst them. On the backend I would have queried the metadata endpoints of the API's and determined the lowest rate limit, and on the frontend, fetch data with a `setInterval` using this value.
 
+I also did not design mobile-first, so this app doesn't look perfect on a smartphone.
+
 2. **Is any part of it over-designed? ( It is fine to over-design to showcase your skills as long as you are clear about it)** 
 
 I wrote this program as if it were to scale to allow for more exchanges and cryptocurrencies, but in reality I think if the concern were really only two currencies and two exchanges, a backend would not really have been necessary, which I might consider the over-designed part of this project. Fetching from two endpoints and transforming the retrieved data would have been faster to write in JavaScript, although it may have been slower computationally. Go is very fast which is why I chose it over Python (my other backend language of choice), but the way you are meant to handle JSON with structs felt a little difficult versus the way JavaScript unmarshals it all for you.
