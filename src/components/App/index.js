@@ -92,7 +92,10 @@ class App extends React.Component {
 				/>)
 			}
 			</div>
-			</div>
+			<p className="source">
+				<a href="https://github.com/mattConn/chainalysis-takehome" target="_blank">Source</a>
+			</p>
+			</div> {/* end container */}
 		</div>
 	}
 }

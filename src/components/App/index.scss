@@ -54,5 +54,15 @@ body {
 			justify-content: center;
 			align-content: space-around;
 		}
+
+		.source {
+			float: right;
+			a {
+				font-family: $font-main;
+				color: $darkest-blue;
+				font-size: 20px;
+				
+			}
+		}
 	}
 }
