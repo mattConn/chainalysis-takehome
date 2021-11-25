@@ -1,0 +1,11 @@
+{
+    "gemini": {
+			"btc": "https://api.gemini.com/v2/ticker/BTCUSD",
+			"eth": "https://api.gemini.com/v2/ticker/ETHUSD"
+		},
+
+	"kraken": {
+			"btc": "https://api.kraken.com/0/public/Ticker?pair=BTCUSD",
+			"eth": "https://api.kraken.com/0/public/Ticker?pair=ETHUSD"
+		}
+}

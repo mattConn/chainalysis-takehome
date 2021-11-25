@@ -1,5 +1,6 @@
 import React from 'react';
 import CoinCard from '../CoinCard';
+import getPrices from './api';
 
 import './index.scss'
 
@@ -11,6 +12,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount(){
+		console.log(getPrices('btc'))
 		const endpoints = [
 			`${process.env.REACT_APP_BACKEND}/eth`,
 			`${process.env.REACT_APP_BACKEND}/btc`,
