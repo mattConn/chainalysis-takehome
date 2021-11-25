@@ -12,7 +12,7 @@ const CoinCard = (props) => <div className={`coin-card ${props.name} ${!props.lo
 	<div className="coin-title">
 		<img className="icon" alt="icon" src={props.icon}/>
 		<p>{props.name}</p>
-		<span className="glyphicon glyphicon-refresh" onClick={props.refreshHandler}></span>
+		{/* <span className="glyphicon glyphicon-refresh" onClick={props.refreshHandler}></span> */}
 	</div>
 
 	<div className="exchanges">

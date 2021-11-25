@@ -12,19 +12,13 @@ class App extends React.Component {
 	}
 
 	componentDidMount(){
-		console.log(getPrices('btc'))
-		const endpoints = [
-			`${process.env.REACT_APP_BACKEND}/eth`,
-			`${process.env.REACT_APP_BACKEND}/btc`,
-		]
-
 		const symbols = [
 			"eth",
 			"btc"
 		]
 
-		Promise.all(endpoints.map(e => fetch(e)))
-		.then(responses => Promise.all(responses.map(r => r.json())))
+		setInterval(() => {
+		Promise.all(symbols.map(s => getPrices(s)))
 		.then(data => {
 			const coins = {}
 			symbols.forEach((symbol, i) => {
@@ -36,10 +30,11 @@ class App extends React.Component {
 				loaded: true
 			})
 		})
-		.catch(error => this.setState({
+		.catch(() => this.setState({
 			error: "Cannot make initial fetch",
 			loaded: true
 		}))
+	}, 1000)
 }
 
 	render(){
@@ -76,21 +71,21 @@ class App extends React.Component {
 					icon={`/${coin}.svg`}
 					exchanges={this.state.coins[coin].exchanges}
 					loaded={this.state.coins[coin].loaded}
-					refreshHandler={()=>{
-						const coins = this.state.coins
-						coins[coin].loaded = false
-						this.setState({coins: coins})
+					// refreshHandler={()=>{
+					// 	const coins = this.state.coins
+					// 	coins[coin].loaded = false
+					// 	this.setState({coins: coins})
 
-						fetch(`${process.env.REACT_APP_BACKEND}/${coin}`)
-						.then(response => response.json())
-						.then(data => {
-							const coins = this.state.coins
-							coins[coin].exchanges=data
-							coins[coin].loaded = true 
-							this.setState({coins: coins})
-						})
-						.catch(error => this.setState({error: `Cannot fetch ${process.env.REACT_APP_BACKEND}/${coin}`}))
-					}}
+					// 	fetch(`${process.env.REACT_APP_BACKEND}/${coin}`)
+					// 	.then(response => response.json())
+					// 	.then(data => {
+					// 		const coins = this.state.coins
+					// 		coins[coin].exchanges=data
+					// 		coins[coin].loaded = true 
+					// 		this.setState({coins: coins})
+					// 	})
+					// 	.catch(error => this.setState({error: `Cannot fetch ${process.env.REACT_APP_BACKEND}/${coin}`}))
+					// }}
 				/>)
 			}
 			</div>
