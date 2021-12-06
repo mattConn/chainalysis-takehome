@@ -1,13 +1,9 @@
 @import '../../styles/variables';
 
 .coin-card {
-	color: white;
+	color: $light-grey;
 	font-family: $font-main;
-	background-color: $darkest-blue;
-	margin: $margin-medium;
-	display: inline-block;
-	// width: 45%;
-	flex-basis: 45%;
+	background-color: $black-blue;
 	opacity: 1;
 	transition: opacity 2s;
 

@@ -19,31 +19,17 @@
 			text-transform: capitalize;
 		}
 		.recommend {
-			&.buy-now {
-				p{
-					color: $cool-green;
-				}
+			.buy, .sell {
+				display: inline-block;
+				transition: opacity .2s;
 			}
-			&.sell-now {
-				p {
-					color: $cool-red;
-				}
+			.buy {
+				color: $cool-green;
+				margin-right: $margin-small;
 			}
-			&.buy-sell-now {
-				p{
-					display: inline-block;
-					&.buy {
-						text-transform: capitalize;
-						color: $cool-green;
-						margin-right: $margin-small;
-					}
-					&.sell {
-						text-transform: capitalize;
-						color: $cool-red;
-					}
-				}
+			.sell {
+				color: $cool-red;
 			}
-
 			padding: $padding-very-small;
 			border-radius: 5%;
 			p {

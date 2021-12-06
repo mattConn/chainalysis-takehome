@@ -2,8 +2,8 @@ const kraken = (data) => {
     const d = Object.keys(data.result)[0]
 
     return {
-        buy: data.result[d].a[0],
-        sell: data.result[d].b[0]
+        buy: parseFloat(data.result[d].a[0]).toFixed(2),
+        sell: parseFloat(data.result[d].b[0]).toFixed(2)
     }
 }
 
